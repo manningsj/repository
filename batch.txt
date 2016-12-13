@@ -1,0 +1,39 @@
+#!/bin/bash
+# My first script
+echo "Enter a file name(include the .txt part):"
+read text
+echo "Here are the number of lines in the file:" 
+wc -l $text
+echo "Here are the word counts for the files"
+wc -w $text
+declare -A count
+for word in $(< "$text"); do
+    (( count[$word]++ ))
+done
+
+max=0
+
+for word in "${!count[@]}"; do
+    if (( ${count[$word]} > $max )); then
+        max=${count[$word]}
+        max_word=$word
+    fi
+done
+min=max
+for word in "${!count[@]}"; do
+    if (( ${count[$word]} < $min)); then
+        min=${count[$word]}
+        min_word=$word
+    fi
+done
+echo "most repetative word: '$max_word', seen $max times"
+
+echo "the least repatitive word is: '$min_word', seen $min times"
+echo "this is the count of the words that start with a d and end with a d (ignoring case)"
+grep -ic ^d.*d $text
+echo "this is the count of the words that start with an A (ignoring case)"
+grep -ic ^a $text
+echo "this is the number of numeric words"
+grep -c ^[^a-z]*$ $text
+echo "this is the number of alphanumberic words"
+grep -c [a-z][1-9] $text
